@@ -16,6 +16,10 @@ const Stage1 = () => {
         const validate = validateInput(value);
         
         if(validate){
+            // form is valid ... add player
+            setError([false, '']);
+            context.addPlayer(value);
+            textInput.current.value = value;
 
         } else {
             console.log('error');
@@ -33,6 +37,8 @@ const Stage1 = () => {
         }
         return true;
     }
+
+    console.log(context);
     return (
         <>
             <Form className="mt-4" onSubmit={handleSubmit}>
@@ -44,7 +50,14 @@ const Stage1 = () => {
                         ref={textInput}
                     />
                 </Form.Group>
-                <Button className="miami mt-2" variant="primary" type="submit">
+                { 
+                    error[0] ?  
+                    <Alert variant='danger'>
+                        {error[1]}
+                    </Alert> 
+                    : null
+                }
+                <Button className="miami" variant="primary" type="submit">
                     Add player
                 </Button>
             </Form>
