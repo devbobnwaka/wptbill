@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const MyContext = React.createContext()
+const MyContext = React.createContext();
 
 class MyProvider extends Component{
 
@@ -19,14 +21,62 @@ class MyProvider extends Component{
         }));
     }
 
+    removePlayerHandler = (idx) => {
+        let newArray = this.state.players;
+        newArray.splice(idx, 1);
+        this.setState({players:newArray});
+    }
+
+    nextHandler = () => {
+        const { players } = this.state;
+        // Check if user have right amount of player
+        if(players.length < 2) {
+            // call the toast
+            toast.error("You need more than one player", {
+                position: toast.POSITION.TOP_LEFT,
+            });
+        } else {
+            // move the stage
+            this.setState({
+                stage:2
+            }, () => {
+                setTimeout(()=>{
+                    this.generateLooser()
+                }, 2000)
+            })
+        }
+    }
+
+    generateLooser = () => {
+        const { players } = this.state;
+        this.setState({
+            result: players[Math.floor(Math.random() * players.length)]
+        })
+    }
+
+    resetGame = () => {
+        this.setState({
+            stage: 1,
+            players: [],
+            result: ''
+        })
+    }
+
     render(){
         return(
-            <MyContext.Provider value={{
-                state :this.state,
-                addPlayer: this.addPlayerHandler
-            }}>
-                {this.props.children}
-            </MyContext.Provider>
+            <>
+                <MyContext.Provider value={{
+                    state :this.state,
+                    addPlayer: this.addPlayerHandler,
+                    removePlayer: this.removePlayerHandler,
+                    next: this.nextHandler,
+                    getNewLooser: this.generateLooser,
+                    reset: this.resetGame
+                }}>
+                    {this.props.children}
+                </MyContext.Provider>
+                <ToastContainer/>
+            </>
         )
     }
 }
