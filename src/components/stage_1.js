@@ -38,7 +38,7 @@ const Stage1 = () => {
         return true;
     }
 
-    console.log(context);
+    // console.log(context);
     return (
         <>
             <Form className="mt-4" onSubmit={handleSubmit}>
@@ -60,6 +60,27 @@ const Stage1 = () => {
                 <Button className="miami" variant="primary" type="submit">
                     Add player
                 </Button>
+                {
+                    context.state.players && context.state.players.length > 0 ?
+                    <>
+                        <div>
+                            <ul className='list-group'> 
+                            {
+
+                                context.state.players.map((player, idx  ) => (
+                                    <li key={idx} className='list-group-item d-flex justify-content-between align-items-center list-group-item-action'>
+                                        {player}
+                                        <span className='badge badge-danger' 
+                                            onClick={() => alert('removed')}
+                                        >x</span>
+                                    </li>
+                                ))
+                            }
+                            </ul>
+                        </div>
+                    </>
+                    : null
+                }
             </Form>
         </>
     );
